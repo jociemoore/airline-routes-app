@@ -1395,7 +1395,7 @@ const airports = [
 
 ];
 
-const getAirlineById = function(id) {;
+const getAirlineById = function(id) {
   const airline = airlines.filter((al) => al.id === id);
   return airline[0]['name'];
 }
