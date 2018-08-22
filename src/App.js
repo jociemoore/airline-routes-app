@@ -4,13 +4,17 @@ import Data from './data.js'
 
 class App extends Component {
   render() {
-    const allRoutes = Data.routes.map((rt) => (
+    const routes = Data.routes;
+    const getAirlineById = Data.getAirlineById;
+    const getAirportByCode = Data.getAirportByCode;
+    const allRoutes = routes.map((rt) => (
       <tr>
-        <td>{rt.airline}</td>
-        <td>{rt.src}</td>
-        <td>{rt.dest}</td>
+        <td>{getAirlineById(rt.airline)}</td>
+        <td>{getAirportByCode(rt.src)}</td>
+        <td>{getAirportByCode(rt.dest)}</td>
       </tr>
     ));
+
     return (
       <div className="app">
         <header className="header">
@@ -18,7 +22,14 @@ class App extends Component {
         </header>
         <section>
           <table>
-            {allRoutes}
+            <tbody>
+              <tr>
+                <th>Airline</th>
+                <th>Source Airport</th>
+                <th>Destination Airport</th>
+                </tr>
+                {allRoutes}
+            </tbody>
           </table>
         </section>
       </div>
