@@ -9,7 +9,6 @@ class Table extends Component {
     };
     this.handlePrevClick = this.handlePrevClick.bind(this);
     this.handleNextClick = this.handleNextClick.bind(this);
-    this.handleSelectAirline = this.handleSelectAirline.bind(this);
   }
 
   componentDidMount() {
@@ -32,10 +31,6 @@ class Table extends Component {
     });
   }
 
-  handleSelectAirline(e) {
-    this.props.filterByAirline(e);
-  }
-
   render() {
     const format = this.props.format;
     const totalRoutes = this.props.rows.length;
@@ -53,21 +48,8 @@ class Table extends Component {
       </tr>
     ));
 
-    const airlines = this.props.airlines.map((airline) => (
-      <option value={airline.name}>{airline.name}</option>
-    ));
-
     return (
       <div>
-        <div>
-          <p>
-            Show routes on
-            <select onChange={this.handleSelectAirline}>
-              <option value="">All Airlines</option>
-              {airlines}
-            </select>
-          </p>
-        </div>
         <table>
           <thead>
             <tr>

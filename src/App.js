@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import Data from './data.js'
-import Table from './components/Table.js'
+import Data from './data.js';
+import Table from './components/Table.js';
+import Select from './components/Select.js';
 
 class App extends Component {
   constructor(props) {
@@ -24,8 +25,8 @@ class App extends Component {
     const allRows = Data.routes;
 
     return function(e) {
-      const newRows = allRows.filter((row) => {
-        return Data.getAirlineById(row.airline) === e.target.value
+      const newRows = allRows.filter(function(row) {
+        return row.airline === parseInt(e.target.value, 10);
       });
 
       this.setState({
@@ -52,20 +53,33 @@ class App extends Component {
       }
     };
 
+    const filteredAirlines = Data.airlines;
+
     return (
       <div className="app">
         <header className="header">
           <h1 className="title">Airline Routes</h1>
         </header>
         <section>
+          <div>
+            <p>
+              Show routes on
+            <Select
+              options={filteredAirlines}
+              valueKey="id"
+              titleKey="name"
+              allTitle="All Airlines"
+              value=""
+              onSelect={this.filterByAirline}
+            />
+            </p>
+          </div>
           <Table
             className="routes-table"
             columns={columns}
             rows={this.state.rows}
             format={formatValue}
             perPage={perPage}
-            airlines={Data.airlines}
-            filterByAirline={this.filterByAirline}
           />
         </section>
       </div>
