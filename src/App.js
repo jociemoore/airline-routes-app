@@ -3,6 +3,7 @@ import './App.css';
 import Data from './data.js';
 import Table from './components/Table.js';
 import Select from './components/Select.js';
+import Map from './components/Map.js'
 
 class App extends Component {
   constructor(props) {
@@ -149,6 +150,14 @@ class App extends Component {
   render() {
     const filteredAirlines = this.filterAirlines();
     const filteredAirports = this.filterAirports();
+    const mapRoutes = this.state.rows.map((row) => (
+      Object.assign({}, row, {
+        srcCoordinates: [this.state.allAirports.filter((airport) => row['src'] === airport.code)[0]['lat'],
+                        this.state.allAirports.filter((airport) => row['src'] === airport.code)[0]['long']],
+        destCoordinates: [this.state.allAirports.filter((airport) => row['dest'] === airport.code)[0]['lat'],
+                         this.state.allAirports.filter((airport) => row['dest'] === airport.code)[0]['long']],
+      })
+    ));
 
     return (
       <div className="app">
@@ -156,6 +165,7 @@ class App extends Component {
           <h1 className="title">Airline Routes</h1>
         </header>
         <section>
+          <Map routes={mapRoutes}/>
           <p>
             Show routes on
             <Select
