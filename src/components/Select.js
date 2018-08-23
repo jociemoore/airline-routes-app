@@ -7,6 +7,7 @@ class Select extends Component {
   }
 
   handleSelectOption(e) {
+    console.log(e.target)
     this.props.onSelect(e);
   }
 
@@ -19,7 +20,7 @@ class Select extends Component {
 
     return(
       <select onChange={this.handleSelectOption}>
-        <option value={this.props.value}>{this.props.allTitle}</option>
+        <option selected={this.props.selectDefault} value={this.props.value}>{this.props.allTitle}</option>
         {options}
       </select>
     );

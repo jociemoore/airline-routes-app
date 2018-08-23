@@ -17,6 +17,7 @@ class App extends Component {
       allAirports: [],
       perPage: 0,
       columns: [],
+      selectDefault: true,
     }
 
     this.getAirlineById = Data.getAirlineById;
@@ -74,6 +75,7 @@ class App extends Component {
       rows: newRows,
       airlineFilter: airlineFilter,
       airportFilter: airportFilter,
+      selectDefault: false,
     });
   }
 
@@ -90,6 +92,7 @@ class App extends Component {
       rows: this.state.allRoutes,
       airlineFilter: '',
       airportFilter: '',
+      selectDefault: true,
     });
   }
 
@@ -161,6 +164,7 @@ class App extends Component {
               titleKey="name"
               allTitle="All Airlines"
               value=""
+              selectDefault={this.state.selectDefault}
               onSelect={this.filterByAirline}
             />
             flying in or out of
@@ -170,6 +174,7 @@ class App extends Component {
               titleKey="name"
               allTitle="All Airports"
               value=""
+              selectDefault={this.state.selectDefault}
               onSelect={this.filterByAirport}
             />
             <button onClick={this.clearFilters}>
