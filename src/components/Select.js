@@ -13,9 +13,8 @@ class Select extends Component {
   render() {
     const valueKey = this.props.valueKey;
     const titleKey = this.props.titleKey;
-    const enabledOptions = this.props.enabledOptions;
     const options = this.props.options.map((option) => (
-      <option disabled={!enabledOptions[option[valueKey]]} value={option[valueKey]}>{option[titleKey]}</option>
+      <option disabled={option["disabled"]} value={option[valueKey]}>{option[titleKey]}</option>
     ));
 
     return(

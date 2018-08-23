@@ -28,6 +28,8 @@ class App extends Component {
     this.clearFilters = this.clearFilters.bind(this);
     this.getCurrentAirlineIds = this.getCurrentAirlineIds.bind(this);
     this.getCurrentAirportCodes = this.getCurrentAirportCodes.bind(this);
+    this.filterAirlines = this.filterAirlines.bind(this);
+    this.filterAirports = this.filterAirports.bind(this);
   }
 
   componentDidMount() {
@@ -125,11 +127,25 @@ class App extends Component {
     return codes;
   }
 
-  render() {
-    const filteredAirlines = this.state.allAirlines;
-    const filteredAirports = this.state.allAirports;
-    const currentAirportCodes = this.getCurrentAirportCodes();
+  filterAirlines() {
     const currentAirlineIds = this.getCurrentAirlineIds();
+
+    return this.state.allAirlines.map((airline) => (
+      Object.assign({}, airline, {disabled: !currentAirlineIds[airline.id]})
+    ));
+  }
+
+  filterAirports() {
+    const currentAirportCodes = this.getCurrentAirportCodes();
+
+    return this.state.allAirports.map((airport) => (
+      Object.assign({}, airport, {disabled: !currentAirportCodes[airport.code]})
+    ));
+  }
+
+  render() {
+    const filteredAirlines = this.filterAirlines();
+    const filteredAirports = this.filterAirports();
 
     return (
       <div className="app">
@@ -143,7 +159,6 @@ class App extends Component {
               options={filteredAirlines}
               valueKey="id"
               titleKey="name"
-              enabledOptions={currentAirlineIds}
               allTitle="All Airlines"
               value=""
               onSelect={this.filterByAirline}
@@ -153,7 +168,6 @@ class App extends Component {
               options={filteredAirports}
               valueKey="code"
               titleKey="name"
-              enabledOptions={currentAirportCodes}
               allTitle="All Airports"
               value=""
               onSelect={this.filterByAirport}
