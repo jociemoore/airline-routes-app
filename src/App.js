@@ -10,50 +10,79 @@ class App extends Component {
 
     this.state = {
       rows: [],
+      airlineFilter: '',
+      airportFilter: '',
+      allRoutes: [],
+      allAirlines: [],
+      allAirports: [],
+      perPage: 0,
+      columns: [],
     }
-
-    this.filterByAirline = this.filterByAirline().bind(this);
+    
+    this.getAirlineById = Data.getAirlineById;
+    this.getAirportByCode = Data.getAirportByCode;
+    this.filterByAirline = this.filterByAirline.bind(this);
+    this.filterByAirport = this.filterByAirport.bind(this);
+    this.filterRoutes = this.filterRoutes.bind(this);
+    this.formatValue = this.formatValue.bind(this);
   }
 
   componentDidMount() {
     this.setState({
       rows: Data.routes,
+      allRoutes: Data.routes,
+      allAirlines: Data.airlines,
+      allAirports: Data.airports,
+      perPage: 25,
+      columns: [
+        {name: 'Airline', property: 'airline'},
+        {name: 'Source Airport', property: 'src'},
+        {name: 'Destination Airport', property: 'dest'},
+      ],
     });
   }
 
-  filterByAirline() {
-    const allRows = Data.routes;
-
-    return function(e) {
-      const newRows = allRows.filter(function(row) {
-        return row.airline === parseInt(e.target.value, 10);
-      });
-
-      this.setState({
-        rows: newRows.length === 0 ? allRows : newRows,
-      });
-    }
+  filterByAirline(e) {
+    this.filterRoutes({airlineFilter: parseInt(e.target.value, 10)});
   }
 
+  filterByAirport(e) {
+    this.filterRoutes({airportFilter: e.target.value});
+  }
+
+  filterRoutes({airlineFilter = this.state.airlineFilter, airportFilter = this.state.airportFilter}) {
+    let newRows = this.state.allRoutes;
+
+    if (airlineFilter) {
+      newRows = newRows.filter((route) => (
+        route.airline === airlineFilter
+      ));
+    }
+
+    if (airportFilter) {
+      newRows = newRows.filter((route) => (
+        route.src === airportFilter || route.dest === airportFilter
+      ));
+    }
+
+    this.setState({
+      rows: newRows,
+      airlineFilter: airlineFilter,
+      airportFilter: airportFilter,
+    });
+  }
+
+  formatValue(property, value) {
+    if (property === 'airline') {
+      return this.getAirlineById(value[property]);
+    } else {
+      return this.getAirportByCode(value[property]);
+    }
+  };
+
   render() {
-    const getAirlineById = Data.getAirlineById;
-    const getAirportByCode = Data.getAirportByCode;
-    const perPage = 25;
-    const columns = [
-      {name: 'Airline', property: 'airline'},
-      {name: 'Source Airport', property: 'src'},
-      {name: 'Destination Airport', property: 'dest'},
-    ];
-
-    const formatValue = function(property, value) {
-      if (property === 'airline') {
-        return getAirlineById(value[property]);
-      } else {
-        return getAirportByCode(value[property]);
-      }
-    };
-
-    const filteredAirlines = Data.airlines;
+    const filteredAirlines = this.state.allAirlines;
+    const filteredAirports = this.state.allAirports;
 
     return (
       <div className="app">
@@ -64,22 +93,31 @@ class App extends Component {
           <div>
             <p>
               Show routes on
-            <Select
-              options={filteredAirlines}
-              valueKey="id"
-              titleKey="name"
-              allTitle="All Airlines"
-              value=""
-              onSelect={this.filterByAirline}
-            />
+              <Select
+                options={filteredAirlines}
+                valueKey="id"
+                titleKey="name"
+                allTitle="All Airlines"
+                value=""
+                onSelect={this.filterByAirline}
+              />
+              flying in or out of
+              <Select
+                options={filteredAirports}
+                valueKey="code"
+                titleKey="name"
+                allTitle="All Airports"
+                value=""
+                onSelect={this.filterByAirport}
+              />
             </p>
           </div>
           <Table
             className="routes-table"
-            columns={columns}
+            columns={this.state.columns}
             rows={this.state.rows}
-            format={formatValue}
-            perPage={perPage}
+            format={this.formatValue}
+            perPage={this.state.perPage}
           />
         </section>
       </div>

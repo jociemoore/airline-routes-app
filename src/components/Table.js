@@ -9,12 +9,7 @@ class Table extends Component {
     };
     this.handlePrevClick = this.handlePrevClick.bind(this);
     this.handleNextClick = this.handleNextClick.bind(this);
-  }
-
-  componentDidMount() {
-    this.setState({
-      endIndex: this.props.perPage,
-    })
+    this.getEndIndex = this.getEndIndex.bind(this);
   }
 
   handlePrevClick(e) {
@@ -31,15 +26,21 @@ class Table extends Component {
     });
   }
 
+  getEndIndex() {
+    const totalRoutes = this.props.rows.length;
+    const perPage = this.props.perPage;
+    return totalRoutes < perPage ? totalRoutes : perPage;
+  }
+
   render() {
     const format = this.props.format;
     const totalRoutes = this.props.rows.length;
     const startIndex = this.state.startIndex;
-    const endIndex = this.state.endIndex;
+    const endIndex = this.getEndIndex();
     const perPage = this.props.perPage;
     const columnTypes = this.props.columns.map((column) => column.property);
     const columnHeaders = this.props.columns.map((column) => <th>{column.name}</th>);
-    const summary = `Showing ${startIndex + 1} - ${startIndex + perPage} of ${totalRoutes} routes.`;
+    const summary = `Showing ${startIndex + 1} - ${endIndex} of ${totalRoutes} routes.`;
     const rows = this.props.rows.slice(startIndex, endIndex).map((row) => (
       <tr>
         <td>{format(columnTypes[0], row)}</td>
