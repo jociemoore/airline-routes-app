@@ -9,6 +9,7 @@ class Table extends Component {
     };
     this.handlePrevClick = this.handlePrevClick.bind(this);
     this.handleNextClick = this.handleNextClick.bind(this);
+    this.handleSelectAirline = this.handleSelectAirline.bind(this);
   }
 
   componentDidMount() {
@@ -31,6 +32,10 @@ class Table extends Component {
     });
   }
 
+  handleSelectAirline(e) {
+    this.props.filterByAirline(e);
+  }
+
   render() {
     const format = this.props.format;
     const totalRoutes = this.props.rows.length;
@@ -39,6 +44,7 @@ class Table extends Component {
     const perPage = this.props.perPage;
     const columnTypes = this.props.columns.map((column) => column.property);
     const columnHeaders = this.props.columns.map((column) => <th>{column.name}</th>);
+    const summary = `Showing ${startIndex + 1} - ${startIndex + perPage} of ${totalRoutes} routes.`;
     const rows = this.props.rows.slice(startIndex, endIndex).map((row) => (
       <tr>
         <td>{format(columnTypes[0], row)}</td>
@@ -47,10 +53,21 @@ class Table extends Component {
       </tr>
     ));
 
-    const summary = `Showing ${startIndex + 1} - ${startIndex + perPage} of ${totalRoutes} routes.`;
+    const airlines = this.props.airlines.map((airline) => (
+      <option value={airline.name}>{airline.name}</option>
+    ));
 
     return (
       <div>
+        <div>
+          <p>
+            Show routes on
+            <select onChange={this.handleSelectAirline}>
+              <option value="">All Airlines</option>
+              {airlines}
+            </select>
+          </p>
+        </div>
         <table>
           <thead>
             <tr>
@@ -62,7 +79,7 @@ class Table extends Component {
           </tbody>
         </table>
         <p>{summary}</p>
-        <div>
+        <div className="pagination">
           <button
             disabled={startIndex === 0}
             onClick={this.handlePrevClick}>
