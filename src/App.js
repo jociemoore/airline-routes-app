@@ -18,13 +18,14 @@ class App extends Component {
       perPage: 0,
       columns: [],
     }
-    
+
     this.getAirlineById = Data.getAirlineById;
     this.getAirportByCode = Data.getAirportByCode;
     this.filterByAirline = this.filterByAirline.bind(this);
     this.filterByAirport = this.filterByAirport.bind(this);
     this.filterRoutes = this.filterRoutes.bind(this);
-    this.formatValue = this.formatValue.bind(this);
+    this.formatValue = this.formatValue.bind(this);;
+    this.clearFilters = this.clearFilters.bind(this);
   }
 
   componentDidMount() {
@@ -80,6 +81,14 @@ class App extends Component {
     }
   };
 
+  clearFilters() {
+    this.setState({
+      rows: this.state.allRoutes,
+      airlineFilter: '',
+      airportFilter: '',
+    });
+  }
+
   render() {
     const filteredAirlines = this.state.allAirlines;
     const filteredAirports = this.state.allAirports;
@@ -90,28 +99,29 @@ class App extends Component {
           <h1 className="title">Airline Routes</h1>
         </header>
         <section>
-          <div>
-            <p>
-              Show routes on
-              <Select
-                options={filteredAirlines}
-                valueKey="id"
-                titleKey="name"
-                allTitle="All Airlines"
-                value=""
-                onSelect={this.filterByAirline}
-              />
-              flying in or out of
-              <Select
-                options={filteredAirports}
-                valueKey="code"
-                titleKey="name"
-                allTitle="All Airports"
-                value=""
-                onSelect={this.filterByAirport}
-              />
-            </p>
-          </div>
+          <p>
+            Show routes on
+            <Select
+              options={filteredAirlines}
+              valueKey="id"
+              titleKey="name"
+              allTitle="All Airlines"
+              value=""
+              onSelect={this.filterByAirline}
+            />
+            flying in or out of
+            <Select
+              options={filteredAirports}
+              valueKey="code"
+              titleKey="name"
+              allTitle="All Airports"
+              value=""
+              onSelect={this.filterByAirport}
+            />
+            <button onClick={this.clearFilters}>
+              Show All Routes
+            </button>
+          </p>
           <Table
             className="routes-table"
             columns={this.state.columns}

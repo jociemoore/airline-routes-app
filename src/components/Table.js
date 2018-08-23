@@ -37,7 +37,6 @@ class Table extends Component {
     const totalRoutes = this.props.rows.length;
     const startIndex = this.state.startIndex;
     const endIndex = this.getEndIndex();
-    const perPage = this.props.perPage;
     const columnTypes = this.props.columns.map((column) => column.property);
     const columnHeaders = this.props.columns.map((column) => <th>{column.name}</th>);
     const summary = `Showing ${startIndex + 1} - ${endIndex} of ${totalRoutes} routes.`;
