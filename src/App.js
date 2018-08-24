@@ -6,33 +6,17 @@ import Select from './components/Select.js';
 import Map from './components/Map.js'
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      rows: [],
-      airlineFilter: '',
-      airportFilter: '',
-      allRoutes: [],
-      allAirlines: [],
-      allAirports: [],
-      perPage: 0,
-      columns: [],
-      airlineSelectValue: '',
-      airportSelectValue: '',
-    }
-
-    this.getAirlineById = Data.getAirlineById;
-    this.getAirportByCode = Data.getAirportByCode;
-    this.filterByAirline = this.filterByAirline.bind(this);
-    this.filterByAirport = this.filterByAirport.bind(this);
-    this.filterRoutes = this.filterRoutes.bind(this);
-    this.formatValue = this.formatValue.bind(this);;
-    this.clearFilters = this.clearFilters.bind(this);
-    this.getCurrentAirlineIds = this.getCurrentAirlineIds.bind(this);
-    this.getCurrentAirportCodes = this.getCurrentAirportCodes.bind(this);
-    this.filterAirlines = this.filterAirlines.bind(this);
-    this.filterAirports = this.filterAirports.bind(this);
+  state = {
+    rows: [],
+    airlineFilter: '',
+    airportFilter: '',
+    allRoutes: [],
+    allAirlines: [],
+    allAirports: [],
+    perPage: 0,
+    columns: [],
+    airlineSelectValue: '',
+    airportSelectValue: '',
   }
 
   componentDidMount() {
@@ -52,15 +36,15 @@ class App extends Component {
     });
   }
 
-  filterByAirline(e) {
+  filterByAirline = (e) => {
     this.filterRoutes({airlineFilter: parseInt(e.target.value, 10)});
-  }
+  };
 
-  filterByAirport(e) {
+  filterByAirport = (e) => {
     this.filterRoutes({airportFilter: e.target.value});
-  }
+  };
 
-  filterRoutes({airlineFilter = this.state.airlineFilter, airportFilter = this.state.airportFilter}) {
+  filterRoutes = ({airlineFilter = this.state.airlineFilter, airportFilter = this.state.airportFilter}) => {
     let newRows = this.state.allRoutes;
 
     if (airlineFilter) {
@@ -82,17 +66,20 @@ class App extends Component {
       airlineSelectValue: airlineFilter,
       airportSelectValue: airportFilter,
     });
-  }
+  };
 
-  formatValue(property, value) {
+  formatValue = (property, value) => {
+    const getAirlineById = Data.getAirlineById;
+    const getAirportByCode = Data.getAirportByCode;
+
     if (property === 'airline') {
-      return this.getAirlineById(value[property]);
+      return getAirlineById(value[property]);
     } else {
-      return this.getAirportByCode(value[property]);
+      return getAirportByCode(value[property]);
     }
   };
 
-  clearFilters() {
+  clearFilters = () => {
     this.setState({
       rows: this.state.allRoutes,
       airlineFilter: '',
@@ -100,9 +87,9 @@ class App extends Component {
       airlineSelectValue: 'default',
       airportSelectValue: 'default',
     });
-  }
+  };
 
-  getCurrentAirlineIds() {
+  getCurrentAirlineIds = () => {
     const ids = {};
 
     this.state.rows.forEach((row) => {
@@ -114,9 +101,9 @@ class App extends Component {
     });
 
     return ids;
-  }
+  };
 
-  getCurrentAirportCodes() {
+  getCurrentAirportCodes = () => {
     const codes = {};
 
     this.state.rows.forEach((row) => {
@@ -134,23 +121,23 @@ class App extends Component {
     });
 
     return codes;
-  }
+  };
 
-  filterAirlines() {
+  filterAirlines = () => {
     const currentAirlineIds = this.getCurrentAirlineIds();
 
     return this.state.allAirlines.map((airline) => (
       Object.assign({}, airline, {disabled: !currentAirlineIds[airline.id]})
     ));
-  }
+  };
 
-  filterAirports() {
+  filterAirports = () => {
     const currentAirportCodes = this.getCurrentAirportCodes();
 
     return this.state.allAirports.map((airport) => (
       Object.assign({}, airport, {disabled: !currentAirportCodes[airport.code]})
     ));
-  }
+  };
 
   render() {
     const filteredAirlines = this.filterAirlines();

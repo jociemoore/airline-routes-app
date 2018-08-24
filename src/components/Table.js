@@ -1,48 +1,51 @@
 import React, { Component } from 'react';
 
 class Table extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      startIndex: 0,
-      endIndex: 0,
-    };
-    this.handlePrevClick = this.handlePrevClick.bind(this);
-    this.handleNextClick = this.handleNextClick.bind(this);
-    this.getEndIndex = this.getEndIndex.bind(this);
+  state = {
+    startIndex: 0,
+    endIndex: 0,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    const newTotalRoutes = nextProps.rows.length;
+    const newPerPage = nextProps.perPage;
+
+    if (newTotalRoutes !== this.props.rows.length) {
+      this.setState({
+        endIndex: newTotalRoutes < newPerPage ? newTotalRoutes : newPerPage,
+      });
+    }
   }
 
-  handlePrevClick(e) {
+  handlePrevClick = (e) => {
     this.setState({
       startIndex: this.state.startIndex - this.props.perPage,
       endIndex: this.state.endIndex - this.props.perPage,
     });
-  }
+  };
 
-  handleNextClick(e) {
+  handleNextClick = (e) => {
     this.setState({
       startIndex: this.state.startIndex + this.props.perPage,
       endIndex: this.state.endIndex + this.props.perPage,
     });
-  }
+  };
 
-  getEndIndex() {
-    const totalRoutes = this.props.rows.length;
-    const perPage = this.props.perPage;
-    return totalRoutes < perPage ? totalRoutes : perPage;
-  }
+  setEndIndex = () => {
+
+  };
 
   render() {
     const format = this.props.format;
     const totalRoutes = this.props.rows.length;
     const startIndex = this.state.startIndex;
-    const endIndex = this.getEndIndex();
+    const endIndex = this.state.endIndex;
     const summary = `Showing ${startIndex + 1} - ${endIndex} of ${totalRoutes} routes.`;
     const columnTypes = this.props.columns.map((column) => column.property);
     const columnHeaders = this.props.columns.map((column) => (
-      <th key={`talbecolumn-${column.property}`}>{column.name}</th>
+      <th key={`tablecolumn-${column.property}`}>{column.name}</th>
     ));
-    
+
     const rows = this.props.rows.slice(startIndex, endIndex).map((row) => (
       <tr key={`tablerow-${row.airline}-${row.src}-${row.dest}`}>
         <td>{format(columnTypes[0], row)}</td>
