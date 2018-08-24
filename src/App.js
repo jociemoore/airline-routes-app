@@ -8,31 +8,31 @@ import Map from './components/Map.js'
 class App extends Component {
   state = {
     rows: [],
+    columns: [],
+    perPage: 0,
     airlineFilter: '',
     airportFilter: '',
+    airlineSelectValue: '',
+    airportSelectValue: '',
     allRoutes: [],
     allAirlines: [],
     allAirports: [],
-    perPage: 0,
-    columns: [],
-    airlineSelectValue: '',
-    airportSelectValue: '',
   }
 
   componentDidMount() {
     this.setState({
       rows: Data.routes,
-      allRoutes: Data.routes,
-      allAirlines: Data.airlines,
-      allAirports: Data.airports,
-      perPage: 25,
       columns: [
         {name: 'Airline', property: 'airline'},
         {name: 'Source Airport', property: 'src'},
         {name: 'Destination Airport', property: 'dest'},
       ],
+      perPage: 25,
       airlineSelectValue: 'default',
       airportSelectValue: 'default',
+      allRoutes: Data.routes,
+      allAirlines: Data.airlines,
+      allAirports: Data.airports,
     });
   }
 
