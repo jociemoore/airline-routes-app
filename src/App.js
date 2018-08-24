@@ -1,56 +1,69 @@
 import React, { Component } from 'react';
 import './App.css';
-import Data from './data.js';
+import DATA from './data.js';
 import Table from './components/Table.js';
 import Select from './components/Select.js';
 import Map from './components/Map.js'
 
 class App extends Component {
   state = {
-    rows: [],
-    columns: [],
-    perPage: 0,
     airlineFilter: '',
     airportFilter: '',
-    airlineSelectValue: '',
-    airportSelectValue: '',
-    allRoutes: [],
-    allAirlines: [],
-    allAirports: [],
-  }
-
-  componentDidMount() {
-    this.setState({
-      rows: Data.routes,
-      columns: [
-        {name: 'Airline', property: 'airline'},
-        {name: 'Source Airport', property: 'src'},
-        {name: 'Destination Airport', property: 'dest'},
-      ],
-      perPage: 25,
-      airlineSelectValue: 'default',
-      airportSelectValue: 'default',
-      allRoutes: Data.routes,
-      allAirlines: Data.airlines,
-      allAirports: Data.airports,
-    });
   }
 
   formatValue = (property, value) => {
-    const getAirlineById = Data.getAirlineById;
-    const getAirportByCode = Data.getAirportByCode;
-
     if (property === 'airline') {
-      return getAirlineById(value[property]);
+      return DATA.getAirlineById(value[property]);
     } else {
-      return getAirportByCode(value[property]);
+      return DATA.getAirportByCode(value[property]);
     }
   };
 
-  getCurrentAirlineIds = () => {
+  handleFilterRoutesByAirline = (e) => {
+    e.preventDefault();
+    this.setState({
+      airlineFilter: parseInt(e.target.value, 10),
+    });
+  };
+
+  handleFilterRoutesByAirport = (e) => {
+    e.preventDefault();
+    this.setState({
+      airportFilter: e.target.value,
+    });
+  };
+
+  filterRoutes = () => {
+    let routes = DATA.routes;
+    const airlineFilter = this.state.airlineFilter;
+    const airportFilter = this.state.airportFilter;
+
+    if (airlineFilter) {
+      routes = routes.filter((route) => (
+        route.airline === airlineFilter
+      ));
+    }
+
+    if (airportFilter) {
+      routes = routes.filter((route) => (
+        route.src === airportFilter || route.dest === airportFilter
+      ));
+    }
+
+    return routes;
+  };
+
+  clearFilters = () => {
+    this.setState({
+      airlineFilter: '',
+      airportFilter: '',
+    });
+  };
+
+  getCurrentAirlineIds = (currentRoutes) => {
     const ids = {};
 
-    this.state.rows.forEach((row) => {
+    currentRoutes.forEach((row) => {
       if (ids[row.airline]) {
         ids[row.airline] += 1;
       } else {
@@ -61,10 +74,10 @@ class App extends Component {
     return ids;
   };
 
-  getCurrentAirportCodes = () => {
+  getCurrentAirportCodes = (currentRoutes) => {
     const codes = {};
 
-    this.state.rows.forEach((row) => {
+    currentRoutes.forEach((row) => {
       if (codes[row.src]) {
         codes[row.src] += 1;
       } else {
@@ -81,75 +94,37 @@ class App extends Component {
     return codes;
   };
 
-  handleFilterRoutesByAirline = (e) => {
-    this.filterRoutes({airlineFilter: parseInt(e.target.value, 10)});
-  };
+  render() {
+    const filteredRoutes = this.filterRoutes();
+    const currentAirlineIds = this.getCurrentAirlineIds(filteredRoutes);
+    const currentAirportCodes = this.getCurrentAirportCodes(filteredRoutes);
 
-  handleFilterRoutesByAirport = (e) => {
-    this.filterRoutes({airportFilter: e.target.value});
-  };
-
-  filterRoutes = ({airlineFilter = this.state.airlineFilter, airportFilter = this.state.airportFilter}) => {
-    let newRows = this.state.allRoutes;
-
-    if (airlineFilter) {
-      newRows = newRows.filter((route) => (
-        route.airline === airlineFilter
-      ));
-    }
-
-    if (airportFilter) {
-      newRows = newRows.filter((route) => (
-        route.src === airportFilter || route.dest === airportFilter
-      ));
-    }
-
-    this.setState({
-      rows: newRows,
-      airlineFilter: airlineFilter,
-      airportFilter: airportFilter,
-      airlineSelectValue: airlineFilter,
-      airportSelectValue: airportFilter,
-    });
-  };
-
-  filterAirlines = () => {
-    const currentAirlineIds = this.getCurrentAirlineIds();
-
-    return this.state.allAirlines.map((airline) => (
+    const filteredAirlines = DATA.airlines.map((airline) => (
       Object.assign({}, airline, {disabled: !currentAirlineIds[airline.id]})
     ));
-  };
 
-  filterAirports = () => {
-    const currentAirportCodes = this.getCurrentAirportCodes();
-
-    return this.state.allAirports.map((airport) => (
+    const filteredAirports = DATA.airports.map((airport) => (
       Object.assign({}, airport, {disabled: !currentAirportCodes[airport.code]})
     ));
-  };
 
-  clearFilters = () => {
-    this.setState({
-      rows: this.state.allRoutes,
-      airlineFilter: '',
-      airportFilter: '',
-      airlineSelectValue: 'default',
-      airportSelectValue: 'default',
-    });
-  };
-
-  render() {
-    const filteredAirlines = this.filterAirlines();
-    const filteredAirports = this.filterAirports();
-    const mapRoutes = this.state.rows.map((row) => (
+    const mapRoutes = filteredRoutes.map((row) => (
       Object.assign({}, row, {
-        srcCoordinates: [this.state.allAirports.filter((airport) => row['src'] === airport.code)[0]['lat'],
-                        this.state.allAirports.filter((airport) => row['src'] === airport.code)[0]['long']],
-        destCoordinates: [this.state.allAirports.filter((airport) => row['dest'] === airport.code)[0]['lat'],
-                         this.state.allAirports.filter((airport) => row['dest'] === airport.code)[0]['long']],
+        srcCoordinates: [
+          DATA.airports.filter((airport) => row['src'] === airport.code)[0]['lat'],
+          DATA.airports.filter((airport) => row['src'] === airport.code)[0]['long']
+        ],
+        destCoordinates: [
+          DATA.airports.filter((airport) => row['dest'] === airport.code)[0]['lat'],
+          DATA.airports.filter((airport) => row['dest'] === airport.code)[0]['long']
+        ],
       })
     ));
+
+    const columns = [
+      {name: 'Airline', property: 'airline'},
+      {name: 'Source Airport', property: 'src'},
+      {name: 'Destination Airport', property: 'dest'},
+    ];
 
     return (
       <div className="app">
@@ -165,7 +140,7 @@ class App extends Component {
               valueKey="id"
               titleKey="name"
               allTitle="All Airlines"
-              value={this.state.airlineSelectValue}
+              value={this.state.airlineFilter}
               onSelect={this.handleFilterRoutesByAirline}
             />
             flying in or out of
@@ -174,7 +149,7 @@ class App extends Component {
               valueKey="code"
               titleKey="name"
               allTitle="All Airports"
-              value={this.state.airportSelectValue}
+              value={this.state.airportFilter}
               onSelect={this.handleFilterRoutesByAirport}
             />
             <button onClick={this.clearFilters}>
@@ -183,10 +158,9 @@ class App extends Component {
           </p>
           <Table
             className="routes-table"
-            columns={this.state.columns}
-            rows={this.state.rows}
+            columns={columns}
+            rows={filteredRoutes}
             format={this.formatValue}
-            perPage={this.state.perPage}
           />
         </section>
       </div>

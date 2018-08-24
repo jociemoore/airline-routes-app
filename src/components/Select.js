@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
 class Select extends Component {
+  handleSelectOption = (e) => {
+    e.preventDefault();
+    this.props.onSelect(e);
+  };
+
   render() {
     const valueKey = this.props.valueKey;
     const titleKey = this.props.titleKey;
@@ -14,8 +19,8 @@ class Select extends Component {
     ));
 
     return(
-      <select value={this.props.value} onChange={this.props.onSelect}>
-        <option value="default">{this.props.allTitle}</option>
+      <select value={this.props.value} onChange={this.handleSelectOption}>
+        <option value="">{this.props.allTitle}</option>
         {options}
       </select>
     );

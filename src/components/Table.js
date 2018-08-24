@@ -4,36 +4,41 @@ class Table extends Component {
   state = {
     startIndex: 0,
     endIndex: 0,
+    perPage: 0,
   };
 
-  componentWillReceiveProps(nextProps) {
-    const newTotalRows = nextProps.rows.length;
-    const newPerPage = nextProps.perPage;
+  componentDidMount() {
+    this.setState({
+      endIndex: 25,
+      perPage: 25,
+    });
+  }
 
-    if (newTotalRows !== this.props.rows.length) {
+  componentWillReceiveProps(nextProps) {
+    const newTotalRoutes = nextProps.rows.length;
+
+    if (newTotalRoutes !== this.props.rows.length) {
       this.setState({
         startIndex: 0,
-        endIndex: newTotalRows < newPerPage ? newTotalRows : newPerPage,
+        endIndex: newTotalRoutes < this.state.perPage ? newTotalRoutes : this.state.perPage,
       });
     }
   }
 
   handlePrevClick = (e) => {
+    e.preventDefault();
     this.setState({
-      startIndex: this.state.startIndex - this.props.perPage,
-      endIndex: this.state.endIndex - this.props.perPage,
+      startIndex: this.state.startIndex - this.state.perPage,
+      endIndex: this.state.endIndex - this.state.perPage,
     });
   };
 
   handleNextClick = (e) => {
+    e.preventDefault();
     this.setState({
-      startIndex: this.state.startIndex + this.props.perPage,
-      endIndex: this.state.endIndex + this.props.perPage,
+      startIndex: this.state.startIndex + this.state.perPage,
+      endIndex: this.state.endIndex + this.state.perPage,
     });
-  };
-
-  setEndIndex = () => {
-
   };
 
   render() {
