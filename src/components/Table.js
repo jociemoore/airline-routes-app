@@ -12,6 +12,7 @@ class Table extends Component {
 
     if (newTotalRows !== this.props.rows.length) {
       this.setState({
+        startIndex: 0,
         endIndex: newTotalRows < newPerPage ? newTotalRows : newPerPage,
       });
     }
