@@ -8,7 +8,7 @@ class Map extends Component {
       let x2 = route.destCoordinates[1];
       let y2 = route.destCoordinates[0];
 
-      return <g key={`${route.airline}-${route.src}-${route.dest}`}>
+      return <g key={`maproute-${route.airline}-${route.src}-${route.dest}`}>
         <circle className="source" cx={x1} cy={y1}>
           <title>{route.src}</title>
         </circle>

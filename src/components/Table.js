@@ -37,11 +37,14 @@ class Table extends Component {
     const totalRoutes = this.props.rows.length;
     const startIndex = this.state.startIndex;
     const endIndex = this.getEndIndex();
-    const columnTypes = this.props.columns.map((column) => column.property);
-    const columnHeaders = this.props.columns.map((column) => <th>{column.name}</th>);
     const summary = `Showing ${startIndex + 1} - ${endIndex} of ${totalRoutes} routes.`;
+    const columnTypes = this.props.columns.map((column) => column.property);
+    const columnHeaders = this.props.columns.map((column) => (
+      <th key={`talbecolumn-${column.property}`}>{column.name}</th>
+    ));
+    
     const rows = this.props.rows.slice(startIndex, endIndex).map((row) => (
-      <tr>
+      <tr key={`tablerow-${row.airline}-${row.src}-${row.dest}`}>
         <td>{format(columnTypes[0], row)}</td>
         <td>{format(columnTypes[1], row)}</td>
         <td>{format(columnTypes[2], row)}</td>

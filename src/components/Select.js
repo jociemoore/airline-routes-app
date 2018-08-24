@@ -7,7 +7,6 @@ class Select extends Component {
   }
 
   handleSelectOption(e) {
-    console.log(e.target)
     this.props.onSelect(e);
   }
 
@@ -15,12 +14,17 @@ class Select extends Component {
     const valueKey = this.props.valueKey;
     const titleKey = this.props.titleKey;
     const options = this.props.options.map((option) => (
-      <option disabled={option["disabled"]} value={option[valueKey]}>{option[titleKey]}</option>
+      <option
+        key={`select-${option[valueKey]}`} 
+        disabled={option["disabled"]}
+        value={option[valueKey]}>
+          {option[titleKey]}
+      </option>
     ));
 
     return(
-      <select onChange={this.handleSelectOption}>
-        <option selected={this.props.selectDefault} value={this.props.value}>{this.props.allTitle}</option>
+      <select value={this.props.value} onChange={this.handleSelectOption}>
+        <option value="default">{this.props.allTitle}</option>
         {options}
       </select>
     );
