@@ -56,7 +56,7 @@ class Table extends Component {
 
     return (
       <div>
-        <table>
+        <table className="routes-table">
           <thead>
             <tr>
               {columnHeaders}

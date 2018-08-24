@@ -46,7 +46,7 @@ select {
   width: 90%;
 }
 
-.pagination a {
+.pagination button {
   margin: 0 .5em;
 }
 
