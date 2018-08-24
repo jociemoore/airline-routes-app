@@ -36,38 +36,6 @@ class App extends Component {
     });
   }
 
-  filterByAirline = (e) => {
-    this.filterRoutes({airlineFilter: parseInt(e.target.value, 10)});
-  };
-
-  filterByAirport = (e) => {
-    this.filterRoutes({airportFilter: e.target.value});
-  };
-
-  filterRoutes = ({airlineFilter = this.state.airlineFilter, airportFilter = this.state.airportFilter}) => {
-    let newRows = this.state.allRoutes;
-
-    if (airlineFilter) {
-      newRows = newRows.filter((route) => (
-        route.airline === airlineFilter
-      ));
-    }
-
-    if (airportFilter) {
-      newRows = newRows.filter((route) => (
-        route.src === airportFilter || route.dest === airportFilter
-      ));
-    }
-
-    this.setState({
-      rows: newRows,
-      airlineFilter: airlineFilter,
-      airportFilter: airportFilter,
-      airlineSelectValue: airlineFilter,
-      airportSelectValue: airportFilter,
-    });
-  };
-
   formatValue = (property, value) => {
     const getAirlineById = Data.getAirlineById;
     const getAirportByCode = Data.getAirportByCode;
@@ -77,16 +45,6 @@ class App extends Component {
     } else {
       return getAirportByCode(value[property]);
     }
-  };
-
-  clearFilters = () => {
-    this.setState({
-      rows: this.state.allRoutes,
-      airlineFilter: '',
-      airportFilter: '',
-      airlineSelectValue: 'default',
-      airportSelectValue: 'default',
-    });
   };
 
   getCurrentAirlineIds = () => {
@@ -123,6 +81,38 @@ class App extends Component {
     return codes;
   };
 
+  handleFilterRoutesByAirline = (e) => {
+    this.filterRoutes({airlineFilter: parseInt(e.target.value, 10)});
+  };
+
+  handleFilterRoutesByAirport = (e) => {
+    this.filterRoutes({airportFilter: e.target.value});
+  };
+
+  filterRoutes = ({airlineFilter = this.state.airlineFilter, airportFilter = this.state.airportFilter}) => {
+    let newRows = this.state.allRoutes;
+
+    if (airlineFilter) {
+      newRows = newRows.filter((route) => (
+        route.airline === airlineFilter
+      ));
+    }
+
+    if (airportFilter) {
+      newRows = newRows.filter((route) => (
+        route.src === airportFilter || route.dest === airportFilter
+      ));
+    }
+
+    this.setState({
+      rows: newRows,
+      airlineFilter: airlineFilter,
+      airportFilter: airportFilter,
+      airlineSelectValue: airlineFilter,
+      airportSelectValue: airportFilter,
+    });
+  };
+
   filterAirlines = () => {
     const currentAirlineIds = this.getCurrentAirlineIds();
 
@@ -137,6 +127,16 @@ class App extends Component {
     return this.state.allAirports.map((airport) => (
       Object.assign({}, airport, {disabled: !currentAirportCodes[airport.code]})
     ));
+  };
+
+  clearFilters = () => {
+    this.setState({
+      rows: this.state.allRoutes,
+      airlineFilter: '',
+      airportFilter: '',
+      airlineSelectValue: 'default',
+      airportSelectValue: 'default',
+    });
   };
 
   render() {
@@ -166,7 +166,7 @@ class App extends Component {
               titleKey="name"
               allTitle="All Airlines"
               value={this.state.airlineSelectValue}
-              onSelect={this.filterByAirline}
+              onSelect={this.handleFilterRoutesByAirline}
             />
             flying in or out of
             <Select
@@ -175,7 +175,7 @@ class App extends Component {
               titleKey="name"
               allTitle="All Airports"
               value={this.state.airportSelectValue}
-              onSelect={this.filterByAirport}
+              onSelect={this.handleFilterRoutesByAirport}
             />
             <button onClick={this.clearFilters}>
               Show All Routes

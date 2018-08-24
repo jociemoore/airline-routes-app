@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 class Map extends Component {
   render() {
     const routes = this.props.routes.map((route) => {
-      let x1 = route.srcCoordinates[1];
-      let y1 = route.srcCoordinates[0];
-      let x2 = route.destCoordinates[1];
-      let y2 = route.destCoordinates[0];
+      const x1 = route.srcCoordinates[1];
+      const y1 = route.srcCoordinates[0];
+      const x2 = route.destCoordinates[1];
+      const y2 = route.destCoordinates[0];
 
       return <g key={`maproute-${route.airline}-${route.src}-${route.dest}`}>
         <circle className="source" cx={x1} cy={y1}>

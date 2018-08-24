@@ -7,12 +7,12 @@ class Table extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const newTotalRoutes = nextProps.rows.length;
+    const newTotalRows = nextProps.rows.length;
     const newPerPage = nextProps.perPage;
 
-    if (newTotalRoutes !== this.props.rows.length) {
+    if (newTotalRows !== this.props.rows.length) {
       this.setState({
-        endIndex: newTotalRoutes < newPerPage ? newTotalRoutes : newPerPage,
+        endIndex: newTotalRows < newPerPage ? newTotalRows : newPerPage,
       });
     }
   }
