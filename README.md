@@ -1,6 +1,8 @@
 # Airline Routes Application
 
-This application allows users to view airline routes and filter them by airline and/or airport. [See here](https://intense-wildwood-70420.herokuapp.com/) It was deployed through Heroku and bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Below you will find some information on how to perform common tasks. You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+Click to see the app [here](https://intense-wildwood-70420.herokuapp.com/).
+
+This application allows users to view airline routes and filter them by airline and/or airport. It was deployed through Heroku and bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Below you will find some information on how to perform common tasks. You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
 ## Table of Contents
 
